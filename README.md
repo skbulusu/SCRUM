@@ -2,7 +2,7 @@
 
 SCRUM, Social Contact Recognition Using Motion, is a tool that has frame-by-frame classification of rat social and aggressive behavior (sniffing, biting, mounting).
 
-There are two separate ways to get from video to behavior labels: the first way includes a pipeline that runs on top of SLEAP / DeepLabCut and another path that is pose-free for raw video when there is no tracking model that exists yet. This project was first trained / validated on CalMS21, a public dataset with annotated mouse social behavior provided by Caltech.
+There are two separate ways to get from video to behavior labels: the first way includes a pipeline that runs on top of SLEAP / DeepLabCut; the second is a path that is pose-free for raw video when there is no tracking model that exists yet. This project was first trained / validated on CalMS21, a public dataset with annotated mouse social behavior provided by Caltech.
 
 
 ## How It Works
