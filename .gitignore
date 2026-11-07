@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+*.egg-info/
+build/
+dist/
+release/
+.pytest_cache/
+.venv/
+*.scrum_cache.npz
+scrum_results/
+.DS_Store
+*.tar.gz
+_old_layout/
+scrum_app_code.zip

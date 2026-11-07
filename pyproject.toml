@@ -1,0 +1,49 @@
+[build-system]
+requires = ["setuptools>=68", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "scrum-behavior"
+dynamic = ["version"]
+description = "Tracking and social behavior classification for rodent video, with a desktop viewer for review and correction"
+readme = "README.md"
+requires-python = ">=3.10"
+authors = [{ name = "Sai Karthik Bulusu" }]
+keywords = ["behavior", "rodent", "tracking", "neuroscience", "computer vision", "BORIS", "SLEAP", "DeepLabCut"]
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "Operating System :: Microsoft :: Windows",
+    "Operating System :: MacOS",
+    "Operating System :: POSIX :: Linux",
+    "Intended Audience :: Science/Research",
+    "Topic :: Scientific/Engineering :: Bio-Informatics",
+]
+dependencies = [
+    "numpy>=1.24",
+    "pandas>=2.0",
+    "scipy>=1.10",
+    "scikit-learn>=1.7,<1.8",
+    "joblib>=1.3",
+    "h5py>=3.8",
+    "opencv-python-headless>=4.8",
+]
+
+[project.optional-dependencies]
+gui = ["PyQt6>=6.5", "matplotlib>=3.7", "reportlab>=4.0", "pillow>=10.0"]
+sleap = ["sleap-io>=0.1"]
+all = ["scrum-behavior[gui,sleap]"]
+
+[project.scripts]
+scrum = "scrum.cli:main"
+
+[project.gui-scripts]
+scrum-viewer = "scrum.cli:gui_main"
+
+[tool.setuptools.dynamic]
+version = { attr = "scrum.__version__" }
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.setuptools.package-data]
+scrum = ["models/*.joblib", "assets/*"]
