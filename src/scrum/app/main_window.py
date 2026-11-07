@@ -128,7 +128,7 @@ class MainWindow(QMainWindow):
         self.mode_combo.addItem("SCRUM (raw video)", "scrum")
         self.mode_combo.addItem("CalMS21 / pose tracks", "calms21")
         self.mode_combo.setFocusPolicy(Qt.FocusPolicy.NoFocus)
-        self.model_label = QLabel("model: -")
+        self.model_label = QLabel("model: SCRUM")
         self.model_label.setObjectName("muted")
 
         controls = QHBoxLayout()
@@ -499,13 +499,11 @@ class MainWindow(QMainWindow):
             self.banner.show_message(f"Could not load predictions from {Path(path).name}: {e}", "error")
             return
         self.project.set_predictions(preds, f"predictions loaded from {Path(path).name}")
-        self.model_label.setText(f"model: {self.project.source}")
         self.banner.show_message(f"Loaded predictions for {len(preds)} frames from {Path(path).name}.", "info", timeout_ms=6000)
         self._refresh_frame()
 
 
     def _announce_calms21_needs_tracks(self) -> None:
-        self.model_label.setText("model: CalMS21 keypoint model (needs pose tracks)")
         self.view.set_message("CalMS21 mode needs a pose tracks file.\nFile > Open Tracks / Pose..., or drop the file here.")
         self.banner.show_message(
             "CalMS21 mode needs a pose tracks file (a tracks CSV with frame, track_id, keypoint, x, y, a SLEAP .h5 or a DeepLabCut CSV). "
@@ -517,7 +515,6 @@ class MainWindow(QMainWindow):
         self.mode = self.mode_combo.currentData()
         self._cancel_detection()
         if self.video is None:
-            self.model_label.setText("model: SCRUM (raw video), open a video" if self.mode == "scrum" else "model: CalMS21 (pose tracks), open a video")
             return
         self.project.clear_detection()
         if self.mode == "scrum":
@@ -550,7 +547,6 @@ class MainWindow(QMainWindow):
         self._cancel_detection()
         token = self._detect_token
         path = self.project.video_path
-        self.model_label.setText("model: running SCRUM detection...")
         self.banner.show_message("Tracking the animals and classifying behavior... 0%", "info", "Cancel", self._cancel_detection_clicked)
         use_split = self.use_split
 
@@ -567,7 +563,6 @@ class MainWindow(QMainWindow):
 
     def _cancel_detection_clicked(self) -> None:
         self._cancel_detection()
-        self.model_label.setText("model: detection cancelled")
         self.banner.show_message("Detection cancelled. The video still plays. Analysis > Run detection again to retry.", "warn", timeout_ms=8000)
 
     def _on_detection_progress(self, token: int, done: int, total: int) -> None:
@@ -603,14 +598,12 @@ class MainWindow(QMainWindow):
         if token != self._detect_token:
             return
         self._detect_worker = None
-        self.model_label.setText("model: detection failed")
         self.banner.show_message(
             f"The tracker could not process this video: {message}. You can still load tracks and predictions CSVs from the File menu.", "error"
         )
 
     def _apply_result(self, result: DetectionResult) -> None:
         self.project.set_result(result)
-        self.model_label.setText(f"model: {result.source}")
         self._refresh_frame()
 
     def _run_keypoint_detection(self) -> None:
@@ -625,7 +618,6 @@ class MainWindow(QMainWindow):
             self.banner.show_message(f"Could not build features from these tracks: {e}", "error")
             return
         self.project.set_predictions(preds, "CalMS21 model (full keypoints)")
-        self.model_label.setText("model: CalMS21 model (full keypoints)")
         self.banner.show_message(f"Classified {len(preds)} frames from the pose tracks.", "info", timeout_ms=6000)
         self._refresh_frame()
 
